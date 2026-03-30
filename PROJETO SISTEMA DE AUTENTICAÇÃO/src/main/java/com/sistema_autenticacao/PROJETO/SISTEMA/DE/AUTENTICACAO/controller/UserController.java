@@ -2,6 +2,7 @@ package com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.controller;
 
 
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.business.UserService;
+import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.dto.LoginRequestDTO;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.dto.UserRequestDTO;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.infrastructure.entitys.User;
 import jakarta.validation.Valid;
@@ -24,5 +25,11 @@ public class UserController {
                         dto.getName(),
                         dto.getEmail(),
                         dto.getPassword()));
+    }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody LoginRequestDTO dto) {
+        return ResponseEntity.ok(userService.login(dto.getEmail(), dto.getPassword()));
     }
 }

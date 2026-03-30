@@ -29,4 +29,16 @@ public class UserService {
 
         return userRepository.saveAndFlush(user);
     }
+
+    public User login(String email, String password) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new RuntimeException("Email não encontrado")
+        );
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Senha Inválida");
+        }
+
+        return user;
+    }
 }
