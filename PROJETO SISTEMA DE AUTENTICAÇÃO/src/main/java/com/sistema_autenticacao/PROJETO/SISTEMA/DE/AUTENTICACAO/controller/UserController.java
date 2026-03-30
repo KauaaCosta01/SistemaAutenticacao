@@ -4,6 +4,7 @@ package com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.controller;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.business.UserService;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.dto.UserRequestDTO;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.infrastructure.entitys.User;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<User> createUser(@RequestBody UserRequestDTO dto) {
+    public ResponseEntity<User> createUser(@RequestBody @Valid UserRequestDTO dto) {
         return ResponseEntity.ok(
                 userService.createUser(
                         dto.getName(),
