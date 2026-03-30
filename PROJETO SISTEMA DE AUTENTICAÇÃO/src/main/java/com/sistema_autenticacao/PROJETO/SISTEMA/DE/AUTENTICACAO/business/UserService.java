@@ -2,6 +2,7 @@ package com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.business;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.infrastructure.entitys.Role;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.infrastructure.entitys.User;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.infrastructure.repositorys.UserRepository;
+import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +11,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    private final JwtService jwtService;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public User createUser(String name, String email, String password) {
@@ -30,7 +33,7 @@ public class UserService {
         return userRepository.saveAndFlush(user);
     }
 
-    public User login(String email, String password) {
+    public String login(String email, String password) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new RuntimeException("Email não encontrado")
         );
@@ -39,6 +42,6 @@ public class UserService {
             throw new RuntimeException("Senha Inválida");
         }
 
-        return user;
+        return jwtService.generateToken(user.getEmail());
     }
 }
