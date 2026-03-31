@@ -1,4 +1,5 @@
 package com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.business;
+import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.dto.UserResponseDTO;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.infrastructure.entitys.Role;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.infrastructure.entitys.User;
 import com.sistema_autenticacao.PROJETO.SISTEMA.DE.AUTENTICACAO.infrastructure.repositorys.UserRepository;
@@ -18,7 +19,7 @@ public class UserService {
         this.jwtService = jwtService;
     }
 
-    public User createUser(String name, String email, String password) {
+    public UserResponseDTO createUser(String name, String email, String password) {
         if(userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email Já cadastrado");
         }
@@ -30,7 +31,13 @@ public class UserService {
                 .role(Role.USER)
                 .build();
 
-        return userRepository.saveAndFlush(user);
+        User saved = userRepository.save(user);
+
+        return new UserResponseDTO(
+                saved.getId(),
+                saved.getName(),
+                saved.getEmail()
+        );
     }
 
     public String login(String email, String password) {
